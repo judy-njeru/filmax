@@ -1,32 +1,24 @@
-import React, {useState, useEffect}from 'react';
+import React, { useState, useEffect }from 'react';
+import { connect } from "react-redux";
+import { getDiscoveredMovies, getConfig, getGenres } from "../redux/actions";
 import './App.css';
 
-import axios from "axios";
 
-function App() {
-  const [appState, setAppState] = useState({
-    loading: false,
-    repos: null,
-  });
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getDiscoveredMovies: () => dispatch(getDiscoveredMovies()),
+    getConfig: () => dispatch(getConfig()),
+    getGenres: () => dispatch(getGenres()),
+  };
+};
 
-  const [genresState, setGenres] = useState({
-    genres: null
-  })
-
-  const [moviesState, setMovies] = useState({
-    movies: null
-  })
-
-  
+function App(props) {
 
   useEffect(() => {
-    setAppState({ loading: true });
-    const apiUrl = 'https://api.themoviedb.org/3/genre/movie/list?api_key=6c6774fdc0da477c7a3f3f7c03048117&language=en-US';
-    axios.get(apiUrl).then((repos) => {
-      const allRepos = repos.data;
-      setAppState({ loading: false, repos: allRepos });
-    });
-  }, [setAppState]);
+    props.getDiscoveredMovies();
+    props.getConfig();
+    props.getGenres();
+  })
 
 
   return (
@@ -36,4 +28,5 @@ function App() {
   );
 }
 
-export default App;
+export default connect(null, mapDispatchToProps)(App);
+
